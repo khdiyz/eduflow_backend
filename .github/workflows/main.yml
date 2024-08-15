@@ -1,0 +1,52 @@
+name:  Deploy Docker-compose Image
+
+on:
+  push:
+    branches:
+      - main
+
+
+env:
+  DOCKER_USERNAME: oqdevpy   # ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: QoOm07082004..  # ${{ secrets.DOCKER_PASSWORD }}
+  DOCKER_IMAGE_NAME: dm-backend
+  DOCKER_IMAGE_TAG: latest
+  SERVER_HOST: 167.172.99.110
+  SERVER_USERNAME: root
+  SSH_PRIVATE_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC0XKWMUDEkd3WVb8ICh+P4lM7Ej718V+8wFirSHDdKOyEK5IfwmMaLD+F+Pm9mnqVs9o4FU0zGk6YLig76T06v0J8743VI7HFaCB6M1oclrniI8uDDM/0TGhsaJp8NPpwOWx/Y/e0v6qTaPB2TzWVlahNndJIZH4zVADaTVN7u70pfnx5xiMRJ9cGOfef3sraOR8ysKjrk62pD/ZKTTDjWg2CdA3L/xZnoqBe/UntBGQz3BWtaKOLCpodj68J5XVRwzzFy+DTUYj8HB5SII0zSqACAG8pBQ4bks2So8bnSW0hJ9uE9OkIsozRlHhAvGdmHyVD2fQZRazv56dQiLXQDeCI2NzdDpNuUxi2KmiX7fRdbnXbRCQprPpcgS+Mi3VxGF8hk8EMpyTrbT3G2EfqGszlsSUa6Cs/kZZWdmLKT7ewNexe1dDn9N/wrVZKu7NoGs4jX2y9l1AetcRdBUNPA9Y6+XGc8EAdWj2HzesX6HvilLXfISQyj0m/CQ4PTMtpiapyVF3/m+IpMGnty8qrM7bpq3Mp5lJyaZub0ilgHEWBLjPEKhk8wveqr26lkzh8sn7kLiGy9HWRImSctKn4VICBmeox9Jddji6/YxARN/CEvczThxHi9JneG8d4spG6ZceNqH4oFBS277kTdTXZjqFsm/qhnv2VQcepwxb04PQ== o.qosimov@tuit.uz  # ${{ secrets.SSH_PRIVATE_KEY }}
+  SSH_PASSWORD: Hasanov@2303FF  # ${{ secrets.SSH_PASSWORD }}
+
+
+
+
+jobs:
+  build_push_deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v1
+
+      # - name: Login to Docker Hub
+      #   run: echo "${{ env.DOCKER_PASSWORD }}" | docker login -u "${{ env.DOCKER_USERNAME }}" --password-stdin
+
+      # - name: Build and push Docker image
+      #   run: |
+      #     docker buildx create --use --name mybuilder
+      #     docker buildx build  --push -t $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG .
+
+      - name: Deploy Docker image to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.SERVER_HOST }}
+          username: ${{ env.SERVER_USERNAME }}
+          password: ${{ env.SSH_PASSWORD }}
+          script: |
+            cd /home/eduflow/backend
+            git pull origin main
+            docker-compose down
+            docker-compose up -d
+            
