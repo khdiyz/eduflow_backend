@@ -72,11 +72,14 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			group.GET("/:id", h.getGroupById)
 			group.PUT("/:id", h.updateGroup)
 			group.DELETE("/:id", h.deleteGroup)
+<<<<<<< HEAD
 
 			// Student API
 			student := v1.Group("/students")
 			student.POST("", h.createStudent)
 			student.GET("", h.getListStudent)
+=======
+>>>>>>> bd4e226 (initial)
 		}
 	}
 

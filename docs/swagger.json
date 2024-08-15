@@ -706,6 +706,7 @@
                 }
             }
         },
+<<<<<<< HEAD
         "/api/v1/students": {
             "get": {
                 "security": [
@@ -789,6 +790,8 @@
                 }
             }
         },
+=======
+>>>>>>> bd4e226 (initial)
         "/api/v1/upload-image": {
             "post": {
                 "security": [
@@ -1387,6 +1390,7 @@
                 }
             }
         },
+<<<<<<< HEAD
         "model.StudentCreateRequest": {
             "type": "object",
             "required": [
@@ -1408,6 +1412,8 @@
                 }
             }
         },
+=======
+>>>>>>> bd4e226 (initial)
         "model.UserCreateRequest": {
             "type": "object",
             "required": [

@@ -712,6 +712,7 @@ const docTemplate = `{
                 }
             }
         },
+<<<<<<< HEAD
         "/api/v1/students": {
             "get": {
                 "security": [
@@ -795,6 +796,8 @@ const docTemplate = `{
                 }
             }
         },
+=======
+>>>>>>> bd4e226 (initial)
         "/api/v1/upload-image": {
             "post": {
                 "security": [
@@ -1393,6 +1396,7 @@ const docTemplate = `{
                 }
             }
         },
+<<<<<<< HEAD
         "model.StudentCreateRequest": {
             "type": "object",
             "required": [
@@ -1414,6 +1418,8 @@ const docTemplate = `{
                 }
             }
         },
+=======
+>>>>>>> bd4e226 (initial)
         "model.UserCreateRequest": {
             "type": "object",
             "required": [

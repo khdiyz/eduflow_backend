@@ -17,7 +17,10 @@ type Service struct {
 	Role
 	Course
 	Group
+<<<<<<< HEAD
 	Student
+=======
+>>>>>>> bd4e226 (initial)
 }
 
 func NewService(repos repository.Repository, strg storage.Storage, log logger.Logger, cfg config.Config) *Service {
@@ -28,7 +31,10 @@ func NewService(repos repository.Repository, strg storage.Storage, log logger.Lo
 		Role:          NewRoleService(repos, log),
 		Course:        NewCourseService(repos, log, cfg),
 		Group:         NewGroupService(repos, log),
+<<<<<<< HEAD
 		Student:       NewStudentService(repos, log),
+=======
+>>>>>>> bd4e226 (initial)
 	}
 }
 
@@ -73,8 +79,11 @@ type Group interface {
 	Update(input model.GroupUpdateRequest) error
 	Delete(id int64) error
 }
+<<<<<<< HEAD
 
 type Student interface {
 	Create(input model.StudentCreateRequest) (int64, error)
 	GetList(pagination *model.Pagination) ([]model.Student, error)
 }
+=======
+>>>>>>> bd4e226 (initial)

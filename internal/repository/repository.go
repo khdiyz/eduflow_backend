@@ -12,16 +12,26 @@ type Repository struct {
 	Role
 	Course
 	Group
+<<<<<<< HEAD
 	Student
+=======
+>>>>>>> bd4e226 (initial)
 }
 
 func NewRepository(db *sqlx.DB, log logger.Logger) *Repository {
 	return &Repository{
+<<<<<<< HEAD
 		User:    NewUserRepo(db, log),
 		Role:    NewRoleRepo(db, log),
 		Course:  NewCourseRepo(db, log),
 		Group:   NewGroupRepo(db, log),
 		Student: NewStudentRepo(db, log),
+=======
+		User:   NewUserRepo(db, log),
+		Role:   NewRoleRepo(db, log),
+		Course: NewCourseRepo(db, log),
+		Group:  NewGroupRepo(db, log),
+>>>>>>> bd4e226 (initial)
 	}
 }
 
@@ -54,8 +64,11 @@ type Group interface {
 	Update(input model.GroupUpdateRequest) error
 	Delete(id int64) error
 }
+<<<<<<< HEAD
 
 type Student interface {
 	Create(input model.StudentCreateRequest) (int64, error)
 	GetList(pagination *model.Pagination) ([]model.Student, error)
 }
+=======
+>>>>>>> bd4e226 (initial)

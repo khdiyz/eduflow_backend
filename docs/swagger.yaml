@@ -92,6 +92,7 @@ definitions:
     required:
     - token
     type: object
+<<<<<<< HEAD
   model.StudentCreateRequest:
     properties:
       address:
@@ -106,6 +107,8 @@ definitions:
     - full_name
     - phone_1
     type: object
+=======
+>>>>>>> bd4e226 (initial)
   model.UserCreateRequest:
     properties:
       birth_date:
@@ -601,6 +604,7 @@ paths:
       summary: Get Role By Id
       tags:
       - Role
+<<<<<<< HEAD
   /api/v1/students:
     get:
       consumes:
@@ -654,6 +658,8 @@ paths:
       summary: Create Student
       tags:
       - Student
+=======
+>>>>>>> bd4e226 (initial)
   /api/v1/upload-image:
     post:
       consumes:
