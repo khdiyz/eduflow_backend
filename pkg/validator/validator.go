@@ -10,6 +10,7 @@ import (
 // Custom validation function for Uzbek phone numbers starting with +998
 func uzbPhoneValidator(fl validator.FieldLevel) bool {
 	phone := fl.Field().String()
+<<<<<<< HEAD
 	if phone != "" {
 		var uzbPhonePattern = `^\+998\d{9}$`
 		re := regexp.MustCompile(uzbPhonePattern)
@@ -17,6 +18,11 @@ func uzbPhoneValidator(fl validator.FieldLevel) bool {
 	}
 
 	return true
+=======
+	var uzbPhonePattern = `^\+998\d{9}$`
+	re := regexp.MustCompile(uzbPhonePattern)
+	return re.MatchString(phone)
+>>>>>>> bd4e226 (initial)
 }
 
 // Custom validation function for checking if a date string follows the "2006-01-02" format
@@ -31,4 +37,8 @@ func dateValidator(fl validator.FieldLevel) bool {
 
 	_, err := time.Parse("2006-01-02", date)
 	return err == nil
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> bd4e226 (initial)
