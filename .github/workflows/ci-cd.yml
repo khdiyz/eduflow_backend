@@ -46,7 +46,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/your-image-name:latest
-            docker stop your-container-name || true
-            docker rm your-container-name || true
-            docker run -d --name your-container-name -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/your-image-name:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/eduflow:latest
+            docker stop eduflow-backend || true
+            docker rm eduflow-backend || true
+            docker run -d --name eduflow-backend -p 4040:4040 ${{ secrets.DOCKER_USERNAME }}/your-image-name:latest
