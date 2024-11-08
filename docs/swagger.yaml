@@ -1,0 +1,15 @@
+host: localhost:4040
+info:
+  contact:
+    email: khdiyz.12@gmail.com
+    name: Diyorbek Hasanov
+  description: API Server for Application
+  title: Eduflow API
+  version: "1.0"
+paths: {}
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
