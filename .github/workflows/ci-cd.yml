@@ -50,3 +50,5 @@ jobs:
             docker stop eduflow-backend || true
             docker rm eduflow-backend || true
             docker run -d --name eduflow-backend -p 4040:4040 ${{ secrets.DOCKER_USERNAME }}/eduflow:latest
+            docker cp /var/www/.env eduflow-backend:/app/.env
+            docker restart eduflow-backend
