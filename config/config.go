@@ -66,7 +66,7 @@ func GetConfig() *Config {
 			JWTAccessExpirationHours: cast.ToInt(getOrReturnDefault("JWT_ACCESS_EXPIRATION_HOURS", "12")),
 			JWTRefreshExpirationDays: cast.ToInt(getOrReturnDefault("JWT_REFRESH_EXPIRATION_DAYS", "3")),
 
-			HashKey: cast.ToString(getOrReturnDefault("HASH_KEY", "skd32r8#$wdahHSdqw")),
+			HashKey: cast.ToString(getOrReturnDefault("HASH_KEY", "skd32r8$wdahHSdqw")),
 
 			MinioEndpoint:    cast.ToString(getOrReturnDefault("MINIO_ENDPOINT", "142.93.102.185:9000")),
 			MinioAccessKeyId: cast.ToString(getOrReturnDefault("MINIO_ACCESS_KEY_ID", "b5qxOurcZQuzJqcztqTR")),
