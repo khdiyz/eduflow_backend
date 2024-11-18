@@ -42,8 +42,8 @@ func main() {
 
 	repos := repository.NewRepository(db, logger)
 	storage := storage.NewStorage(minio, cfg, logger)
-	services := service.NewService(repos, storage, cfg, logger)
-	handlers := handler.NewHandler(services, logger)
+	services := service.NewServices(repos, storage, cfg, logger)
+	handlers := handler.NewHandlers(services, logger)
 
 	srv := new(server.Server)
 	go func() {

@@ -3,6 +3,7 @@ package handler
 import (
 	"eduflow/config"
 	"eduflow/docs"
+	"eduflow/internal/middleware"
 	"eduflow/internal/service"
 	"eduflow/pkg/logger"
 
@@ -12,20 +13,20 @@ import (
 )
 
 type Handler struct {
+	service *service.Service
 }
 
-func NewHandler(service *service.Service, loggers *logger.Logger) *Handler {
-	return &Handler{}
+func NewHandlers(service *service.Service, loggers *logger.Logger) *Handler {
+	return &Handler{
+		service: service,
+	}
 }
 
 func (h *Handler) InitRoutes(cfg *config.Config) *gin.Engine {
 	router := gin.Default()
 
 	router.HandleMethodNotAllowed = true
-	// router.Use(corsMiddleware())
-
-	//swagger settings
-	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+	router.Use(middleware.CorsMiddleware())
 
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler), func(ctx *gin.Context) {
 		docs.SwaggerInfo.Host = ctx.Request.Host
@@ -33,6 +34,14 @@ func (h *Handler) InitRoutes(cfg *config.Config) *gin.Engine {
 			docs.SwaggerInfo.Schemes = []string{"https"}
 		}
 	})
+
+	v1 := router.Group("/api/v1")
+	{
+		roles := v1.Group("/roles")
+		{
+			roles.POST("", h.createRole)
+		}
+	}
 
 	return router
 }
