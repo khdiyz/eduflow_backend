@@ -1,4 +1,13 @@
 definitions:
+  handler.getBranchesResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.Branch'
+        type: array
+      meta:
+        $ref: '#/definitions/models.Pagination'
+    type: object
   handler.listSchool:
     properties:
       data:
@@ -7,6 +16,44 @@ definitions:
         type: array
       meta:
         $ref: '#/definitions/models.Pagination'
+    type: object
+  models.Branch:
+    properties:
+      address:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      opening_hours:
+        type: string
+      phone_number:
+        type: string
+      school_id:
+        type: string
+      status:
+        type: boolean
+      updated_at:
+        type: string
+    type: object
+  models.CreateBranch:
+    properties:
+      address:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      opening_hours:
+        type: string
+      phone_number:
+        type: string
+    required:
+    - name
     type: object
   models.CreateRole:
     properties:
@@ -102,6 +149,23 @@ definitions:
       updated_at:
         type: string
     type: object
+  models.UpdateBranch:
+    properties:
+      address:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      opening_hours:
+        type: string
+      phone_number:
+        type: string
+      status:
+        type: boolean
+    required:
+    - name
+    type: object
   models.UpdateSchool:
     properties:
       address:
@@ -121,7 +185,6 @@ definitions:
     required:
     - currency
     - name
-    - status
     - timezone
     type: object
   response.BaseResponse:
@@ -435,6 +498,245 @@ paths:
       summary: Update School
       tags:
       - School
+  /api/v1/schools/{id}/branches:
+    get:
+      consumes:
+      - application/json
+      description: Get List Branch
+      parameters:
+      - description: School Id
+        in: path
+        name: id
+        required: true
+        type: string
+      - default: 1
+        description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      - default: 10
+        description: limit
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: search
+        in: query
+        name: search
+        type: string
+      - description: status
+        in: query
+        name: status
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.getBranchesResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get List Branch
+      tags:
+      - Branch
+    post:
+      consumes:
+      - application/json
+      description: Create Branch
+      parameters:
+      - description: School Id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Create Branch
+        in: body
+        name: create
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateBranch'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.IdResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Branch
+      tags:
+      - Branch
+  /api/v1/schools/{id}/branches/{branch-id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Branch
+      parameters:
+      - description: School Id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Branch Id
+        in: path
+        name: branch-id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Branch
+      tags:
+      - Branch
+    get:
+      consumes:
+      - application/json
+      description: Get Branch
+      parameters:
+      - description: School id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Branch id
+        in: path
+        name: branch-id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Branch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Branch
+      tags:
+      - Branch
+    put:
+      consumes:
+      - application/json
+      description: Update Branch
+      parameters:
+      - description: School Id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Branch Id
+        in: path
+        name: branch-id
+        required: true
+        type: string
+      - description: Update Branch body
+        in: body
+        name: update
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateBranch'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Branch
+      tags:
+      - Branch
 securityDefinitions:
   ApiKeyAuth:
     in: header

@@ -3,7 +3,6 @@ package postgres
 import (
 	"eduflow/internal/models"
 	"eduflow/pkg/logger"
-	"errors"
 	"time"
 
 	sq "github.com/Masterminds/squirrel"
@@ -11,46 +10,42 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-var (
-	errNoRowsAffected = errors.New("no rows affected")
-)
-
 const (
-	schoolsTable = "schools"
+	branchesTable = "branches"
 )
 
-type SchoolRepository struct {
+type BranchRepository struct {
 	db     *sqlx.DB
 	logger *logger.Logger
 }
 
-func NewSchoolRepository(db *sqlx.DB, logger *logger.Logger) *SchoolRepository {
-	return &SchoolRepository{
+func NewBranchRepository(db *sqlx.DB, logger *logger.Logger) *BranchRepository {
+	return &BranchRepository{
 		db:     db,
 		logger: logger,
 	}
 }
 
-func (r *SchoolRepository) Create(input models.CreateSchool) (uuid.UUID, error) {
+func (r *BranchRepository) Create(input models.CreateBranch) (uuid.UUID, error) {
 	id := uuid.New()
 
-	query, args, err := sq.Insert(schoolsTable).Columns(
+	query, args, err := sq.Insert(branchesTable).Columns(
 		"id",
+		"school_id",
 		"name",
 		"address",
 		"email",
 		"phone_number",
-		"currency",
-		"timezone",
+		"opening_hours",
 		"status",
 	).Values(
 		id,
+		input.SchoolId,
 		input.Name,
 		input.Address,
 		input.Email,
 		input.PhoneNumber,
-		input.Currency,
-		input.Timezone,
+		input.OpeningHours,
 		input.Status,
 	).PlaceholderFormat(sq.Dollar).ToSql()
 
@@ -67,25 +62,23 @@ func (r *SchoolRepository) Create(input models.CreateSchool) (uuid.UUID, error) 
 	return id, nil
 }
 
-func (r *SchoolRepository) GetList(filter models.SchoolFilter) ([]models.School, int, error) {
+func (r *BranchRepository) GetList(filter models.BranchFilter) ([]models.Branch, int, error) {
 	// Squirrel query builder
 	query := sq.Select(
 		"id",
+		"school_id",
 		"name",
 		"address",
 		"email",
 		"phone_number",
-		"currency",
-		"timezone",
+		"opening_hours",
 		"status",
 		"created_at",
 		"updated_at",
-	).From(schoolsTable).Where("TRUE")
+	).From(branchesTable).Where("TRUE")
 
 	// Get the total count
-	countQuery := sq.Select("COUNT(id)").
-		From(schoolsTable).
-		Where("TRUE")
+	countQuery := sq.Select("COUNT(id)").From(branchesTable).Where("TRUE")
 
 	// Filter parameters (conditions)
 	if filter.Search != "" {
@@ -104,6 +97,11 @@ func (r *SchoolRepository) GetList(filter models.SchoolFilter) ([]models.School,
 		countQuery = countQuery.Where("status = ?", *filter.Status)
 	}
 
+	if filter.SchoolId != uuid.Nil {
+		query = query.Where("school_id = ?", filter.SchoolId)
+		countQuery = countQuery.Where("school_id = ?", filter.SchoolId)
+	}
+
 	// Add pagination (limit and offset)
 	if filter.Limit > 0 {
 		query = query.Limit(uint64(filter.Limit))
@@ -118,7 +116,7 @@ func (r *SchoolRepository) GetList(filter models.SchoolFilter) ([]models.School,
 	}
 
 	// Execute the main query
-	schools := []models.School{}
+	branches := []models.Branch{}
 	rows, err := r.db.Query(sqlQuery, args...)
 	if err != nil {
 		r.logger.Error(err)
@@ -126,25 +124,25 @@ func (r *SchoolRepository) GetList(filter models.SchoolFilter) ([]models.School,
 	}
 	defer rows.Close()
 
-	// Scan rows into schools
+	// Scan rows into branches
 	for rows.Next() {
-		var school models.School
+		var branch models.Branch
 		if err := rows.Scan(
-			&school.Id,
-			&school.Name,
-			&school.Address,
-			&school.Email,
-			&school.PhoneNumber,
-			&school.Currency,
-			&school.Timezone,
-			&school.Status,
-			&school.CreatedAt,
-			&school.UpdatedAt,
+			&branch.Id,
+			&branch.SchoolId,
+			&branch.Name,
+			&branch.Address,
+			&branch.Email,
+			&branch.PhoneNumber,
+			&branch.OpeningHours,
+			&branch.Status,
+			&branch.CreatedAt,
+			&branch.UpdatedAt,
 		); err != nil {
 			r.logger.Error(err)
 			return nil, 0, err
 		}
-		schools = append(schools, school)
+		branches = append(branches, branch)
 	}
 
 	countSqlQuery, countArgs, err := countQuery.PlaceholderFormat(sq.Dollar).ToSql()
@@ -159,60 +157,60 @@ func (r *SchoolRepository) GetList(filter models.SchoolFilter) ([]models.School,
 		return nil, 0, err
 	}
 
-	return schools, total, nil
+	return branches, total, nil
 }
 
-func (r *SchoolRepository) GetById(id uuid.UUID) (models.School, error) {
-	var school models.School
+func (r *BranchRepository) GetById(id uuid.UUID) (models.Branch, error) {
+	var branch models.Branch
 
 	// Squirrel query builder
 	query, args, err := sq.Select(
 		"id",
+		"school_id",
 		"name",
 		"address",
 		"email",
 		"phone_number",
-		"currency",
-		"timezone",
+		"opening_hours",
 		"status",
 		"created_at",
 		"updated_at",
-	).From(schoolsTable).Where(sq.Eq{"id": id}).PlaceholderFormat(sq.Dollar).ToSql()
+	).From(branchesTable).Where(sq.Eq{"id": id}).PlaceholderFormat(sq.Dollar).ToSql()
 
 	if err != nil {
 		r.logger.Error(err)
-		return models.School{}, err
+		return models.Branch{}, err
 	}
 
 	// Execute the query
 	if err := r.db.QueryRow(query, args...).Scan(
-		&school.Id,
-		&school.Name,
-		&school.Address,
-		&school.Email,
-		&school.PhoneNumber,
-		&school.Currency,
-		&school.Timezone,
-		&school.Status,
-		&school.CreatedAt,
-		&school.UpdatedAt,
+		&branch.Id,
+		&branch.SchoolId,
+		&branch.Name,
+		&branch.Address,
+		&branch.Email,
+		&branch.PhoneNumber,
+		&branch.OpeningHours,
+		&branch.Status,
+		&branch.CreatedAt,
+		&branch.UpdatedAt,
 	); err != nil {
 		r.logger.Error(err)
-		return models.School{}, err
+		return models.Branch{}, err
 	}
 
-	return school, nil
+	return branch, nil
 }
 
-func (r *SchoolRepository) Update(input models.UpdateSchool) error {
-	query := sq.Update(schoolsTable).PlaceholderFormat(sq.Dollar)
+func (r *BranchRepository) Update(input models.UpdateBranch) error {
+	query := sq.Update(branchesTable).PlaceholderFormat(sq.Dollar)
 
+	query = query.Set("school_id", input.SchoolId)
 	query = query.Set("name", input.Name)
-	query = query.Set("address", input.Addess)
+	query = query.Set("address", input.Address)
 	query = query.Set("email", input.Email)
 	query = query.Set("phone_number", input.PhoneNumber)
-	query = query.Set("currency", input.Currency)
-	query = query.Set("timezone", input.Timezone)
+	query = query.Set("opening_hours", input.OpeningHours)
 	query = query.Set("status", input.Status)
 	query = query.Set("updated_at", time.Now())
 
@@ -243,8 +241,8 @@ func (r *SchoolRepository) Update(input models.UpdateSchool) error {
 	return nil
 }
 
-func (r *SchoolRepository) Delete(id uuid.UUID) error {
-	query := sq.Delete(schoolsTable).Where(sq.Eq{"id": id}).PlaceholderFormat(sq.Dollar)
+func (r *BranchRepository) Delete(id uuid.UUID) error {
+	query := sq.Delete(branchesTable).Where(sq.Eq{"id": id}).PlaceholderFormat(sq.Dollar)
 
 	sqlQuery, args, err := query.ToSql()
 	if err != nil {

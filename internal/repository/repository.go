@@ -13,6 +13,7 @@ type Repository struct {
 	Role
 	User
 	School
+	Branch
 }
 
 func NewRepository(db *sqlx.DB, logger *logger.Logger) *Repository {
@@ -20,6 +21,7 @@ func NewRepository(db *sqlx.DB, logger *logger.Logger) *Repository {
 		Role:   postgres.NewRoleRepository(db, logger),
 		User:   postgres.NewUserRepository(db, logger),
 		School: postgres.NewSchoolRepository(db, logger),
+		Branch: postgres.NewBranchRepository(db, logger),
 	}
 }
 
@@ -39,5 +41,13 @@ type School interface {
 	GetList(filter models.SchoolFilter) ([]models.School, int, error)
 	GetById(id uuid.UUID) (models.School, error)
 	Update(input models.UpdateSchool) error
+	Delete(id uuid.UUID) error
+}
+
+type Branch interface {
+	Create(input models.CreateBranch) (uuid.UUID, error)
+	GetList(filter models.BranchFilter) ([]models.Branch, int, error)
+	GetById(id uuid.UUID) (models.Branch, error)
+	Update(input models.UpdateBranch) error
 	Delete(id uuid.UUID) error
 }

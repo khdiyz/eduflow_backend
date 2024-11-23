@@ -49,6 +49,15 @@ func (h *Handler) InitRoutes(cfg *config.Config) *gin.Engine {
 			schools.GET("/:id", h.getSchoolById)
 			schools.PUT("/:id", h.updateSchool)
 			schools.DELETE("/:id", h.deleteSchool)
+
+			branches := schools.Group("/:id/branches")
+			{
+				branches.POST("", h.createBranch)
+				branches.GET("", h.getBranches)
+				branches.GET("/:branch-id", h.getBranch)
+				branches.PUT("/:branch-id", h.updateBranch)
+				branches.DELETE("/:branch-id", h.deleteBranch)
+			}
 		}
 
 		roles := v1.Group("/roles")

@@ -15,6 +15,7 @@ type Service struct {
 	Role
 	Authorization
 	School
+	Branch
 }
 
 func NewServices(repo *repository.Repository, storage *storage.Storage, cfg *config.Config, logger *logger.Logger) *Service {
@@ -22,6 +23,7 @@ func NewServices(repo *repository.Repository, storage *storage.Storage, cfg *con
 		Role:          NewRoleService(repo),
 		Authorization: NewAuthService(repo, cfg),
 		School:        NewSchoolService(repo),
+		Branch:        NewBranchService(repo),
 	}
 }
 
@@ -42,4 +44,12 @@ type School interface {
 	GetSchool(id uuid.UUID) (models.School, error)
 	Update(input models.UpdateSchool) error
 	Delete(id uuid.UUID) error
+}
+
+type Branch interface {
+	CreateBranch(input models.CreateBranch) (uuid.UUID, error)
+	GetBranches(filter models.BranchFilter) ([]models.Branch, int, error)
+	GetBranch(schoolId, branchId uuid.UUID) (models.Branch, error)
+	UpdateBranch(input models.UpdateBranch) error
+	DeleteBranch(schoolId, branchId uuid.UUID) error
 }
