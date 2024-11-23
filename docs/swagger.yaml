@@ -1,8 +1,12 @@
 definitions:
-  handler.BaseResponse:
+  handler.listSchool:
     properties:
-      message:
-        type: string
+      data:
+        items:
+          $ref: '#/definitions/models.School'
+        type: array
+      meta:
+        $ref: '#/definitions/models.Pagination'
     type: object
   models.CreateRole:
     properties:
@@ -10,6 +14,25 @@ definitions:
         $ref: '#/definitions/models.NameTranslations'
       name:
         $ref: '#/definitions/models.NameTranslations'
+    type: object
+  models.CreateSchool:
+    properties:
+      address:
+        type: string
+      currency:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      phone_number:
+        type: string
+      timezone:
+        type: string
+    required:
+    - currency
+    - name
+    - timezone
     type: object
   models.LoginRequest:
     properties:
@@ -43,6 +66,74 @@ definitions:
     - ru
     - uz
     type: object
+  models.Pagination:
+    properties:
+      limit:
+        default: 10
+        type: integer
+      page:
+        default: 1
+        type: integer
+      page_count:
+        type: integer
+      total_count:
+        type: integer
+    type: object
+  models.School:
+    properties:
+      address:
+        type: string
+      created_at:
+        type: string
+      currency:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      phone_number:
+        type: string
+      status:
+        type: boolean
+      timezone:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.UpdateSchool:
+    properties:
+      address:
+        type: string
+      currency:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      phone_number:
+        type: string
+      status:
+        type: boolean
+      timezone:
+        type: string
+    required:
+    - currency
+    - name
+    - status
+    - timezone
+    type: object
+  response.BaseResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  response.IdResponse:
+    properties:
+      id:
+        type: string
+    type: object
 host: localhost:4040
 info:
   contact:
@@ -74,19 +165,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/handler.BaseResponse'
+            $ref: '#/definitions/response.BaseResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/handler.BaseResponse'
+            $ref: '#/definitions/response.BaseResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/handler.BaseResponse'
+            $ref: '#/definitions/response.BaseResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/handler.BaseResponse'
+            $ref: '#/definitions/response.BaseResponse'
       summary: Login User
       tags:
       - Auth
@@ -108,28 +199,242 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/handler.BaseResponse'
+            $ref: '#/definitions/response.BaseResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/handler.BaseResponse'
+            $ref: '#/definitions/response.BaseResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/handler.BaseResponse'
+            $ref: '#/definitions/response.BaseResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/handler.BaseResponse'
+            $ref: '#/definitions/response.BaseResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/handler.BaseResponse'
+            $ref: '#/definitions/response.BaseResponse'
       security:
       - ApiKeyAuth: []
       summary: Create Role
       tags:
       - Role
+  /api/v1/schools:
+    get:
+      consumes:
+      - application/json
+      description: Get List School
+      parameters:
+      - default: 1
+        description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      - default: 10
+        description: limit
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: search school
+        in: query
+        name: search
+        type: string
+      - description: status
+        in: query
+        name: status
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.listSchool'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get List School
+      tags:
+      - School
+    post:
+      consumes:
+      - application/json
+      description: Create School
+      parameters:
+      - description: Create School
+        in: body
+        name: create
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateSchool'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.IdResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create School
+      tags:
+      - School
+  /api/v1/schools/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete School
+      parameters:
+      - description: school id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete School
+      tags:
+      - School
+    get:
+      consumes:
+      - application/json
+      description: Get School
+      parameters:
+      - description: school id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.School'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get School
+      tags:
+      - School
+    put:
+      consumes:
+      - application/json
+      description: Update School
+      parameters:
+      - description: school id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update School body
+        in: body
+        name: update
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateSchool'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update School
+      tags:
+      - School
 securityDefinitions:
   ApiKeyAuth:
     in: header

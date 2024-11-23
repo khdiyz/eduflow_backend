@@ -117,7 +117,7 @@ func (r *UserRepository) GetList(filter models.UserFilter) ([]models.User, int, 
 	}
 
 	// Execute the main query
-	var users []models.User
+	users := []models.User{}
 	rows, err := r.db.Query(sqlQuery, args...)
 	if err != nil {
 		r.logger.Error(err)

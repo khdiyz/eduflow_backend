@@ -4,7 +4,7 @@ import (
 	"context"
 	"eduflow/cmd/app/server"
 	"eduflow/config"
-	"eduflow/internal/handler"
+	"eduflow/internal/api/handler"
 	"eduflow/internal/repository"
 	"eduflow/internal/service"
 	"eduflow/internal/storage"

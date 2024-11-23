@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"eduflow/internal/api/response"
 	"eduflow/internal/models"
 	"net/http"
 
@@ -13,25 +14,25 @@ import (
 // @Accept json
 // @Produce json
 // @Param create body models.CreateRole true "Create Role"
-// @Success 201 {object} BaseResponse
-// @Failure 400,401,404,500 {object} BaseResponse
+// @Success 201 {object} response.BaseResponse
+// @Failure 400,401,404,500 {object} response.BaseResponse
 // @Router /api/v1/roles [post]
 // @Security ApiKeyAuth
 func (h *Handler) createRole(c *gin.Context) {
 	var body models.CreateRole
 
 	if err := c.ShouldBindJSON(&body); err != nil {
-		errorResponse(c, http.StatusBadRequest, err)
+		response.ErrorResponse(c, http.StatusBadRequest, err)
 		return
 	}
 
 	err := h.service.Role.Create(body)
 	if err != nil {
-		fromError(c, err)
+		response.FromError(c, err)
 		return
 	}
 
-	c.JSON(http.StatusCreated, BaseResponse{
-		Message: createdMessage,
+	c.JSON(http.StatusCreated, response.BaseResponse{
+		Message: response.CreatedMessage,
 	})
 }

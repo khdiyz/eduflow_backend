@@ -3,7 +3,7 @@ package handler
 import (
 	"eduflow/config"
 	"eduflow/docs"
-	"eduflow/internal/middleware"
+	"eduflow/internal/api/middleware"
 	"eduflow/internal/service"
 	"eduflow/pkg/logger"
 
@@ -40,8 +40,17 @@ func (h *Handler) InitRoutes(cfg *config.Config) *gin.Engine {
 		auth.POST("/login", h.loginUser)
 	}
 
-	v1 := router.Group("/api/v1")
+	v1 := router.Group("/api/v1", h.userIdentity())
 	{
+		schools := v1.Group("/schools")
+		{
+			schools.POST("", h.createSchool)
+			schools.GET("", h.getListSchool)
+			schools.GET("/:id", h.getSchoolById)
+			schools.PUT("/:id", h.updateSchool)
+			schools.DELETE("/:id", h.deleteSchool)
+		}
+
 		roles := v1.Group("/roles")
 		{
 			roles.POST("", h.createRole)
