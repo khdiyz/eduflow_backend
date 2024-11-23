@@ -42,6 +42,9 @@ type Config struct {
 	MinioSecretKey   string
 	MinioBucketName  string
 	MinioUseSSL      bool
+
+	SuperAdminUsername string
+	SuperAdminPassword string
 }
 
 func GetConfig() *Config {
@@ -73,6 +76,9 @@ func GetConfig() *Config {
 			MinioSecretKey:   cast.ToString(getOrReturnDefault("MINIO_SECRET_KEY", "ylGnuSIiervvaUN9MVKRgDj2aEC3Tru7WSEdeSOx")),
 			MinioBucketName:  cast.ToString(getOrReturnDefault("MINIO_BUCKET_NAME", "eduflow")),
 			MinioUseSSL:      cast.ToBool(getOrReturnDefault("MINIO_USE_SLL", false)),
+
+			SuperAdminUsername: cast.ToString(getOrReturnDefault("SUPER_ADMIN_USERNAME", "")),
+			SuperAdminPassword: cast.ToString(getOrReturnDefault("SUPER_ADMIN_PASSWORD", "")),
 		}
 	})
 

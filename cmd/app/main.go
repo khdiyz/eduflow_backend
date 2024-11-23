@@ -10,6 +10,7 @@ import (
 	"eduflow/internal/storage"
 	"eduflow/pkg/logger"
 	"eduflow/pkg/setup"
+	"eduflow/seeders"
 	"log"
 	"os"
 	"os/signal"
@@ -34,6 +35,12 @@ func main() {
 	if err != nil {
 		logger.Fatal(err)
 	}
+
+	err = seeders.SeedSuperAdmin(cfg, db)
+	if err != nil {
+		logger.Fatal(err)
+	}
+	logger.Info("Super Admin created successfully")
 
 	minio, err := setup.SetupMinioConnection(cfg, logger)
 	if err != nil {

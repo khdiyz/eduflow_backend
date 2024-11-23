@@ -11,6 +11,25 @@ definitions:
       name:
         $ref: '#/definitions/models.NameTranslations'
     type: object
+  models.LoginRequest:
+    properties:
+      password:
+        default: $uper@Adm1n
+        type: string
+      username:
+        default: superadmin
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  models.LoginResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
   models.NameTranslations:
     properties:
       en:
@@ -33,6 +52,44 @@ info:
   title: Eduflow API
   version: "1.0"
 paths:
+  /api/v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login User
+      parameters:
+      - description: Login User
+        in: body
+        name: create
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.BaseResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.BaseResponse'
+      summary: Login User
+      tags:
+      - Role
   /api/v1/roles:
     post:
       consumes:

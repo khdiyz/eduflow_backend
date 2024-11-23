@@ -1,8 +1,10 @@
 -- +goose Up
 CREATE TABLE IF NOT EXISTS "roles" (
-    "id" UUID PRIMARY KEY,
-    "name" JSONB NOT NULL,
-    "description" JSONB NOT NULL
+    "id" uuid PRIMARY KEY,
+    "name" jsonb NOT NULL,
+    "description" jsonb NOT NULL,
+    "branch_id" uuid,
+    FOREIGN KEY (branch_id) REFERENCES branches(id)
 );
 
 INSERT INTO "roles" ("id", "name", "description")

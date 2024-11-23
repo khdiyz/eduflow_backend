@@ -18,7 +18,7 @@ func NewRoleService(repo *repository.Repository) *RoleService {
 }
 
 func (s *RoleService) Create(role models.CreateRole) error {
-	if err := s.repo.Create(role); err != nil {
+	if err := s.repo.Role.Create(role); err != nil {
 		return serviceError(err, codes.Internal)
 	}
 

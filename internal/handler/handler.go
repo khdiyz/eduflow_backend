@@ -35,6 +35,11 @@ func (h *Handler) InitRoutes(cfg *config.Config) *gin.Engine {
 		}
 	})
 
+	auth := router.Group("/api/v1/auth")
+	{
+		auth.POST("/login", h.loginUser)
+	}
+
 	v1 := router.Group("/api/v1")
 	{
 		roles := v1.Group("/roles")

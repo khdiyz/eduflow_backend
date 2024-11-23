@@ -8,5 +8,6 @@ const (
 	TokenTypeAccess  = "access"
 	TokenTypeRefresh = "refresh"
 
-	RoleSuperAdminId = "199baffd-62a0-451d-9e4f-080ac98f9556"
+	RoleSuperAdminId = "f6c762a0-72ca-45f9-92f6-02f407a23d69"
+	UserSuperAdminId = "7f063efb-29bc-4abf-ac01-6ca16b93f692"
 )

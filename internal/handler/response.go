@@ -11,6 +11,7 @@ import (
 
 const (
 	createdMessage = "created"
+	successMessage = "success"
 )
 
 type BaseResponse struct {
