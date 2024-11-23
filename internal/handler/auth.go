@@ -9,10 +9,10 @@ import (
 
 // @Description Login User
 // @Summary Login User
-// @Tags Role
+// @Tags Auth
 // @Accept json
 // @Produce json
-// @Param create body models.LoginRequest true "Login User"
+// @Param login body models.LoginRequest true "Login User"
 // @Success 200 {object} models.LoginResponse
 // @Failure 400,401,404,500 {object} BaseResponse
 // @Router /api/v1/auth/login [post]

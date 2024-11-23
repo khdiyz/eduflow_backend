@@ -40,7 +40,6 @@ func main() {
 	if err != nil {
 		logger.Fatal(err)
 	}
-	logger.Info("Super Admin created successfully")
 
 	minio, err := setup.SetupMinioConnection(cfg, logger)
 	if err != nil {

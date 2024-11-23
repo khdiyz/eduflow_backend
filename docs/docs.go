@@ -28,13 +28,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Role"
+                    "Auth"
                 ],
                 "summary": "Login User",
                 "parameters": [
                     {
                         "description": "Login User",
-                        "name": "create",
+                        "name": "login",
                         "in": "body",
                         "required": true,
                         "schema": {

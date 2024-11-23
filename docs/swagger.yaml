@@ -60,7 +60,7 @@ paths:
       parameters:
       - description: Login User
         in: body
-        name: create
+        name: login
         required: true
         schema:
           $ref: '#/definitions/models.LoginRequest'
@@ -89,7 +89,7 @@ paths:
             $ref: '#/definitions/handler.BaseResponse'
       summary: Login User
       tags:
-      - Role
+      - Auth
   /api/v1/roles:
     post:
       consumes:
