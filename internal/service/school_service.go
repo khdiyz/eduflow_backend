@@ -59,3 +59,39 @@ func (s *SchoolService) GetListSchool(filter models.SchoolFilter) ([]models.Scho
 
 	return schools, total, nil
 }
+
+func (s *SchoolService) GetSchool(id uuid.UUID) (models.School, error) {
+	school, err := s.repo.School.GetById(id)
+	if err != nil {
+		return models.School{}, serviceError(err, codes.Internal)
+	}
+
+	return school, nil
+}
+
+func (s *SchoolService) Update(input models.UpdateSchool) error {
+	if !slices.Contains(currencyArr, input.Currency) {
+		return serviceError(errors.New("invalid currency value"), codes.InvalidArgument)
+	}
+
+	err := validateTimezone(input.Timezone)
+	if err != nil {
+		return serviceError(err, codes.InvalidArgument)
+	}
+
+	err = s.repo.School.Update(input)
+	if err != nil {
+		return serviceError(err, codes.Internal)
+	}
+
+	return nil
+}
+
+func (s *SchoolService) Delete(id uuid.UUID) error {
+	err := s.repo.School.Delete(id)
+	if err != nil {
+		return serviceError(err, codes.Internal)
+	}
+
+	return nil
+}

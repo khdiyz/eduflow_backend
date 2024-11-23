@@ -37,4 +37,7 @@ type User interface {
 type School interface {
 	Create(input models.CreateSchool) (uuid.UUID, error)
 	GetList(filter models.SchoolFilter) ([]models.School, int, error)
+	GetById(id uuid.UUID) (models.School, error)
+	Update(input models.UpdateSchool) error
+	Delete(id uuid.UUID) error
 }

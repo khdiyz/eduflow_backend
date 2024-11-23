@@ -111,8 +111,19 @@ func (h *Handler) getListSchool(c *gin.Context) {
 // @Router /api/v1/schools/{id} [get]
 // @Security ApiKeyAuth
 func (h *Handler) getSchoolById(c *gin.Context) {
+	id, err := getUUIDParam(c, "id")
+	if err != nil {
+		response.ErrorResponse(c, http.StatusBadRequest, err)
+		return
+	}
 
-	c.JSON(http.StatusOK, models.School{})
+	school, err := h.service.School.GetSchool(id)
+	if err != nil {
+		response.FromError(c, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, school)
 }
 
 // @Description Update School
@@ -127,6 +138,24 @@ func (h *Handler) getSchoolById(c *gin.Context) {
 // @Router /api/v1/schools/{id} [put]
 // @Security ApiKeyAuth
 func (h *Handler) updateSchool(c *gin.Context) {
+	id, err := getUUIDParam(c, "id")
+	if err != nil {
+		response.ErrorResponse(c, http.StatusBadRequest, err)
+		return
+	}
+
+	var body models.UpdateSchool
+	if err := c.ShouldBindJSON(&body); err != nil {
+		response.ErrorResponse(c, http.StatusBadRequest, err)
+		return
+	}
+	body.Id = id
+
+	err = h.service.School.Update(body)
+	if err != nil {
+		response.FromError(c, err)
+		return
+	}
 
 	c.JSON(http.StatusOK, response.BaseResponse{
 		Message: "updated",
@@ -144,6 +173,17 @@ func (h *Handler) updateSchool(c *gin.Context) {
 // @Router /api/v1/schools/{id} [delete]
 // @Security ApiKeyAuth
 func (h *Handler) deleteSchool(c *gin.Context) {
+	id, err := getUUIDParam(c, "id")
+	if err != nil {
+		response.ErrorResponse(c, http.StatusBadRequest, err)
+		return
+	}
+
+	err = h.service.School.Delete(id)
+	if err != nil {
+		response.FromError(c, err)
+		return
+	}
 
 	c.JSON(http.StatusOK, response.BaseResponse{
 		Message: "deleted",

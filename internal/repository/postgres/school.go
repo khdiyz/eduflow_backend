@@ -3,10 +3,16 @@ package postgres
 import (
 	"eduflow/internal/models"
 	"eduflow/pkg/logger"
+	"errors"
+	"time"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+)
+
+var (
+	errNoRowsAffected = errors.New("no rows affected")
 )
 
 const (
@@ -154,4 +160,113 @@ func (r *SchoolRepository) GetList(filter models.SchoolFilter) ([]models.School,
 	}
 
 	return schools, total, nil
+}
+
+func (r *SchoolRepository) GetById(id uuid.UUID) (models.School, error) {
+	var school models.School
+
+	// Squirrel query builder
+	query, args, err := sq.Select(
+		"id",
+		"name",
+		"address",
+		"email",
+		"phone_number",
+		"currency",
+		"timezone",
+		"status",
+		"created_at",
+		"updated_at",
+	).From(schoolsTable).Where(sq.Eq{"id": id}).PlaceholderFormat(sq.Dollar).ToSql()
+
+	if err != nil {
+		r.logger.Error(err)
+		return models.School{}, err
+	}
+
+	// Execute the query
+	if err := r.db.QueryRow(query, args...).Scan(
+		&school.Id,
+		&school.Name,
+		&school.Address,
+		&school.Email,
+		&school.PhoneNumber,
+		&school.Currency,
+		&school.Timezone,
+		&school.Status,
+		&school.CreatedAt,
+		&school.UpdatedAt,
+	); err != nil {
+		r.logger.Error(err)
+		return models.School{}, err
+	}
+
+	return school, nil
+}
+
+func (r *SchoolRepository) Update(input models.UpdateSchool) error {
+	query := sq.Update(schoolsTable).PlaceholderFormat(sq.Dollar)
+
+	query = query.Set("name", input.Name)
+	query = query.Set("address", input.Addess)
+	query = query.Set("email", input.Email)
+	query = query.Set("phone_number", input.PhoneNumber)
+	query = query.Set("currency", input.Currency)
+	query = query.Set("timezone", input.Timezone)
+	query = query.Set("status", input.Status)
+	query = query.Set("updated_at", time.Now())
+
+	query = query.Where(sq.Eq{"id": input.Id})
+
+	sqlQuery, args, err := query.ToSql()
+	if err != nil {
+		r.logger.Error(err)
+		return err
+	}
+
+	row, err := r.db.Exec(sqlQuery, args...)
+	if err != nil {
+		r.logger.Error(err)
+		return err
+	}
+
+	rowAffected, err := row.RowsAffected()
+	if err != nil {
+		r.logger.Error(err)
+		return err
+	}
+
+	if rowAffected == 0 {
+		return errNoRowsAffected
+	}
+
+	return nil
+}
+
+func (r *SchoolRepository) Delete(id uuid.UUID) error {
+	query := sq.Delete(schoolsTable).Where(sq.Eq{"id": id}).PlaceholderFormat(sq.Dollar)
+
+	sqlQuery, args, err := query.ToSql()
+	if err != nil {
+		r.logger.Error(err)
+		return err
+	}
+
+	result, err := r.db.Exec(sqlQuery, args...)
+	if err != nil {
+		r.logger.Error(err)
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		r.logger.Error(err)
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return errNoRowsAffected
+	}
+
+	return nil
 }

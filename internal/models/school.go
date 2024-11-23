@@ -28,7 +28,7 @@ type SchoolFilter struct {
 
 type CreateSchool struct {
 	Name        string `json:"name" binding:"required"`
-	Address      string `json:"address"`
+	Address     string `json:"address"`
 	Email       string `json:"email" binding:"omitempty,email"`
 	PhoneNumber string `json:"phone_number"`
 	Currency    string `json:"currency" binding:"required"`
@@ -40,9 +40,9 @@ type UpdateSchool struct {
 	Id          uuid.UUID `json:"-"`
 	Name        string    `json:"name" binding:"required"`
 	Addess      string    `json:"address"`
-	Email       string    `json:"email"`
+	Email       string    `json:"email" binding:"omitempty,email"`
 	PhoneNumber string    `json:"phone_number"`
 	Currency    string    `json:"currency" binding:"required"`
 	Timezone    string    `json:"timezone" binding:"required"`
-	Status      bool      `json:"status" binding:"required"`
+	Status      bool      `json:"status"`
 }

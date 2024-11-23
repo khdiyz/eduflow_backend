@@ -39,4 +39,7 @@ type Authorization interface {
 type School interface {
 	Create(input models.CreateSchool) (uuid.UUID, error)
 	GetListSchool(filter models.SchoolFilter) ([]models.School, int, error)
+	GetSchool(id uuid.UUID) (models.School, error)
+	Update(input models.UpdateSchool) error
+	Delete(id uuid.UUID) error
 }
