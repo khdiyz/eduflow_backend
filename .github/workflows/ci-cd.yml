@@ -44,7 +44,7 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/eduflow:latest
             docker stop eduflow-backend || true
             docker rm eduflow-backend || true
-            docker create --name eduflow-backend ${{ secrets.DOCKER_USERNAME }}/eduflow:latest
+            docker create --name eduflow-backend -p 4040:4040 ${{ secrets.DOCKER_USERNAME }}/eduflow:latest
             docker cp /var/www/.env eduflow-backend:/app/.env
             docker start eduflow-backend
             docker exec eduflow-backend chmod 600 /app/.env
